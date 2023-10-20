@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>OCR Result</title>
+    <!-- Add this to 'index.html' and 'result.html' -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.all.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+</head>
+<body class="container">
+    <h1 class="my-4">OCR Result</h1>
+    <div class="alert alert-success">
+        <p>{{ text }}</p>
+    </div>
+    <a class="btn btn-primary" href="/">Back to Home</a>
+    <script>
+        Swal.fire({
+            title: "OCR Completed",
+            text: "Here is the result of the OCR process.",
+            icon: "success",
+        });
+    </script>
+</body>
+</html>

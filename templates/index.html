@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Recognization</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.14.0/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<link rel="stylesheet" href="../static/styles.css"> <!-- Create styles.css for custom styles -->
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-8 text-center">
+                <h1 class="mb-4">Text Recognization</h1>
+                <p class="lead">Upload an image or provide a URL to get started.</p>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-md-6">
+                <form action="/upload" method="POST" enctype="multipart/form-data" class="bg-white p-4 rounded">
+                    <div class="form-group">
+                        <label for="file">Upload an Image:</label>
+                        <input type="file" class="form-control-file" name="file" accept="image/*" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Upload and OCR</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form action="/upload" method="POST" class="bg-white p-4 rounded">
+                    <div class="form-group">
+                        <label for="url">Or OCR from URL:</label>
+                        <input type="text" class="form-control" name="url" placeholder="Enter Image URL" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">OCR from URL</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dark/Light Theme Toggle -->
+    <div class="theme-toggle">
+        <label for="theme-switch" class="theme-label">
+            <input type="checkbox" id="theme-switch" class="theme-switch">
+            <span class="slider round"></span>
+        </label>
+    </div>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="scripts.js"></script> <!-- Create scripts.js for custom JavaScript -->
+
+    <script>
+        Swal.fire({
+            title: "Welcome!",
+            text: "This is an OCR.space Web App. You can upload an image or provide an image URL to perform OCR.",
+            icon: "info",
+        });
+        /* scripts.js */
+        document.addEventListener("DOMContentLoaded", function () {
+            const themeSwitch = document.querySelector(".theme-switch");
+
+            themeSwitch.addEventListener("change", function () {
+                if (this.checked) {
+                    document.body.classList.add("bg-dark");
+                    document.body.classList.remove("bg-light");
+                } else {
+                    document.body.classList.add("bg-light");
+                    document.body.classList.remove("bg-dark");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
