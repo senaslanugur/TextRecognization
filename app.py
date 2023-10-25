@@ -44,8 +44,11 @@ def upload():
         if file:
             filename = file.filename
             text = ocr_space_file(filename=filename)
+            json_object = json.loads(text)
+            text = (json_object["ParsedResults"][0]["ParsedText"])
             success_notification('Image Uploaded and OCR Completed', 'Check the OCR result below.')
             return render_template('result.html', text=text)
+            
     elif 'url' in request.form:
         url = request.form['url']
         text = ocr_space_url(url=url)

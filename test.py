@@ -59,7 +59,7 @@ def ocr_space_url(url, overlay=False, api_key='72cec1fa2f88957', language='eng')
 
 
 # Use examples:
-test_file = ocr_space_file(filename='example_image_2.jpg', language='eng')
+test_file = ocr_space_file(filename='Alphabet.png', language='eng')
 test_url = ocr_space_url(url='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUJKeSXf8UEp2iz-KlJXTkGcqfeTuJILA-Gw&usqp=CAU')
 
 print(test_url)
