@@ -6,11 +6,13 @@ import json
 app = Flask(__name__)
 
 def ocr_space_file(filename, overlay=False, api_key='72cec1fa2f88957', language='eng'):
-
+#helloworld
     payload = {'isOverlayRequired': overlay,
-               'apikey': api_key,
+               'apikey': "donotstealthiskey8589",
                'language': language,
                 "OCREngine": 5,
+                "FileType": ".Auto",
+                "detectOrientation": True,
                }
     with open(filename, 'rb') as f:
         r = requests.post('https://api8.ocr.space/parse/image',
@@ -27,6 +29,8 @@ def ocr_space_url(url, overlay=False, api_key='72cec1fa2f88957', language='eng')
                'apikey': api_key,
                'language': language,
                "OCREngine": 5,
+               "FileType": ".Auto",
+
                }
     r = requests.post('https://api8.ocr.space/parse/image',
                       data=payload,
@@ -44,8 +48,8 @@ def upload():
         if file:
             filename = file.filename
             text = ocr_space_file(filename=filename)
-            json_object = json.loads(text)
-            text = (json_object["ParsedResults"][0]["ParsedText"])
+            # json_object = json.loads(text)
+            # text = (json_object["ParsedResults"][0]["ParsedText"])
             success_notification('Image Uploaded and OCR Completed', 'Check the OCR result below.')
             return render_template('result.html', text=text)
             

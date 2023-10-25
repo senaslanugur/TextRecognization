@@ -21,6 +21,7 @@ def ocr_space_file(filename, overlay=False, api_key='72cec1fa2f88957', language=
                'apikey': api_key,
                'language': language,
                 "OCREngine": 5,
+                "FileType": ".Auto",
                }
     with open(filename, 'rb') as f:
         r = requests.post('https://api8.ocr.space/parse/image',
@@ -48,9 +49,10 @@ def ocr_space_url(url, overlay=False, api_key='72cec1fa2f88957', language='eng')
 
     payload = {'url': url,
                'isOverlayRequired': overlay,
-               'apikey': api_key,
+               'apikey': "donotstealthiskey8589",
                'language': language,
                "OCREngine": 5,
+               "FileType": ".Auto",
                }
     r = requests.post('https://api8.ocr.space/parse/image',
                       data=payload,
