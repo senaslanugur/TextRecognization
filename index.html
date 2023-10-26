@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>Layer Rendering</title>
+    <style>
+        html,
+        body,
+        #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.27/esri/themes/light/main.css" />
+    <script src="https://js.arcgis.com/4.27/"></script>
+
+
+</head>
+
+<body>
+    <div id="viewDiv"></div>
+
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/layers/GraphicsLayer",
+            "esri/rest/query",
+            "esri/Graphic",
+            "esri/geometry/Point",
+            "esri/symbols/SimpleMarkerSymbol",
+        ], (Map, MapView, FeatureLayer, GraphicsLayer, query, Graphic, Point, SimpleMarkerSymbol) => {
+
+            const map = new Map({
+                basemap: "topo-vector"
+            });
+            const view = new MapView({
+                container: "viewDiv",
+                map: map,
+                zoom: 4,
+                center: [35.1683, 39.0615]
+            });
+
+            AddGraphicLayerToMap();
+            AddFeatureLayerByGraphic();
+            AddFeatureLayerQueryInClientSide();
+            AddFeatureLayerQueryInServerSide();
+
+            function AddGraphicLayerToMap() {
+                const lineGraphic = CreatePolyline();
+                const polygonGraphic = CreatePolygon();
+                const graphicLayer = new GraphicsLayer();
+                graphicLayer.graphics.add(lineGraphic)
+                graphicLayer.graphics.add(polygonGraphic)
+                // graphicLayer.addMany([lineGraphic, polygonGraphic])
+                map.add(graphicLayer);
+            }
+
+            function AddFeatureLayerByGraphic() {
+                const graphic = CreatePoint();
+                const featureLayer = new FeatureLayer({
+                    source: [graphic],
+                    objectIdField: "OBJECTID",
+                    fields: [{
+                            name: "OBJECTID",
+                            type: "oid"
+                        }, {
+                            name: "Name",
+                            type: "string"
+                        }],
+                    geometryType: "point",
+                    spatialReference: view.spatialReference,
+                    popupTemplate: {
+                        content: "<img src='https://www.turkiyesehirrehberi.org/wp-content/uploads/2020/10/anitkabir-ankara.jpg'>"
+                    },
+                });
+
+                map.add(featureLayer);
+            }
+
+            // Add Feature Layer from the external service.
+            function AddFeatureLayerQueryInClientSide() {
+                const polygonFeatureLayer = new FeatureLayer({
+                    url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Census/MapServer/3"
+                });
+                map.add(polygonFeatureLayer);
+
+                // when changing layer view
+                view.whenLayerView(polygonFeatureLayer).then(layerView => {
+                    layerView.watch("updating", val => {
+                        if (!val) {
+                            layerView.queryFeatures({
+                                // where: "STATE_NAME = 'Washington'"
+                            }).then(res => {
+                                console.log(res.features.map(x => x.attributes));
+                            })
+                        }
+                    })
+
+                })
+            }
+
+            function AddFeatureLayerQueryInServerSide() {
+                let queryUrl = "https://sampleserver6.arcgisonline.com/arcgis/rest/services/SampleWorldCities/MapServer/0";
+
+                query.executeQueryJSON(queryUrl, {  // autocasts as new Query()
+                    where: "POP > 1000000"
+                }).then((res) => {
+                    console.log(res?.features.map(x => x.attributes.CITY_NAME));
+                }, (error) => {
+                    console.log(error); 
+                })
+
+            };
+
+            function CreatePolyline() {
+                let polyline = {
+                type: "polyline",  // autocasts as new Polyline()
+                    paths: [
+                        [26.041667, 35.813056],
+                        [38.5675, 39.106389],
+                        [44.526389, 37.203056],
+                        [45.726389, 38.803056],
+                    ]
+                };
+
+                let polylineSymbol = {
+                type: "simple-line",  // autocasts as SimpleLineSymbol()
+                color: [226, 119, 140],
+                width: 3
+                };
+
+                let polylineAtt = {
+                Name: "TestLine",
+                Owner: "BurhanSozer"
+                };
+
+                return new Graphic({
+                    geometry: polyline,
+                    symbol: polylineSymbol,
+                    attributes: polylineAtt
+                    });
+            }
+            function CreatePolygon() {
+                const polygon =  {
+                    type: "polygon",
+                    rings: [
+                        [26.041667, 35.813056],
+                        [44.5675, 42.106389],
+                        [44.526389, 37.203056],
+                        [26.041667, 35.813056]
+                    ]
+                }
+
+                const simpleFillSymbol = {
+                    type: "simple-fill",
+                    color: [227, 139, 79, 0.2], 
+                    outline: {
+                        color: [255, 255, 255],
+                        width: 1
+                    }
+                };
+
+                return new Graphic({
+                    geometry: polygon,
+                    symbol: simpleFillSymbol,
+
+                });
+
+            }
+            function CreatePoint() {
+                const point = new Point();
+                point.longitude = 32.8597;
+                point.latitude = 39.9334;
+
+                const markerSymbol = new SimpleMarkerSymbol();
+                markerSymbol.color = [226, 119, 40];
+                markerSymbol.size = 9;
+                markerSymbol.outline = {
+                    color: [255, 255, 255],
+                    width: 3
+                }
+
+                return new Graphic({
+                    geometry: point,
+                    symbol: markerSymbol
+                })
+
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>
